@@ -28,13 +28,20 @@ def build_prefix_set(dictionary):
     #         outPut.write("%s\n" % item)
     return prefixes
 
-
+# Default dictionary
 from pprint import pprint
 json_data=open('dictionary.json')
 dictionary = json.load(json_data)
 json_data.close()
-
 allWords = dictionary.keys()
+
+# Names
+names = []
+with open('names.txt') as f:
+    names = f.read().splitlines()
+
+allWords = allWords + names
+
 prefixes = build_prefix_set(allWords)
 
 if len(sys.argv) < 3:
@@ -47,9 +54,9 @@ expectedLength = int(sys.argv[2])
 
 print "processing: " + candidates
 
-possibleWords = findWords(candidateChar, expectedLength, '', dictionary, prefixes)
+possibleWords = findWords(candidateChar, expectedLength, '', allWords, prefixes)
 
 print "Answer:\n"
 for word in possibleWords:
-    defination = dictionary[word.upper()]
+    defination = dictionary[word.upper()] if word.upper() in dictionary.keys() else 'name or special words'
     print "%(key)s: %(val)s\n" % {'key': word, 'val': defination}
